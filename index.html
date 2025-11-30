@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Phish Defender | Cyber Threat Surface Scanner</title>
+  <title>Phish Defender | Cyberdefender Recon Console</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
+  <!-- Top navigation / brand -->
   <header class="topbar">
     <div class="brand">
       <span class="brand-lock">⛨</span>
@@ -17,10 +18,13 @@
     </div>
   </header>
 
+  <!-- Main console -->
   <main class="container">
     <section class="hero">
-      <h1>Cyberdefender Recon Console</h1>
-   
+      <h1>CYBERDEFENDER RECON CONSOLE</h1>
+      <p class="subtitle">
+        Multi‑source intelligence for URLs, bulk lists, email domains &amp; attachments – powered by your Cloudflare Worker.
+      </p>
 
       <!-- Global combined score -->
       <div class="score-row">
@@ -37,13 +41,17 @@
           <span class="badge malicious">66–100 High</span>
         </div>
       </div>
+
+      <p class="small-note">
+        Scores are derived from provider verdicts (SAFE / SUSPICIOUS / MALICIOUS) across configured threat‑intel APIs.
+      </p>
     </section>
 
     <!-- Tabs -->
     <nav class="tabs">
       <button class="tab active" data-tab="tab-url">Single URL</button>
       <button class="tab" data-tab="tab-bulk">Bulk CSV</button>
-      <button class="tab" data-tab="tab-email">Email & OCR</button>
+      <button class="tab" data-tab="tab-email">Email &amp; OCR</button>
     </nav>
 
     <!-- Single URL panel -->
@@ -55,7 +63,12 @@
 
       <div class="panel-row">
         <div class="input-group">
-          <input id="url-input" type="url" placeholder="https://login.example.com" autocomplete="off">
+          <input
+            id="url-input"
+            type="url"
+            placeholder="https://login.example.com"
+            autocomplete="off"
+          >
           <button id="btn-url-scan" class="btn-primary">Scan URL</button>
         </div>
       </div>
@@ -64,7 +77,9 @@
         <p class="small-note">
           Feeds: VirusTotal, urlscan.io, URLHaus, AlienVault OTX, AbuseIPDB, Filescan.io, MalShare (only those with keys configured respond).
         </p>
-        <button id="btn-url-download" class="btn" disabled>Download URL results (CSV)</button>
+        <button id="btn-url-download" class="btn" disabled>
+          Download URL results (CSV)
+        </button>
       </div>
 
       <div id="url-providers" class="results"></div>
@@ -85,7 +100,7 @@
       </div>
 
       <p class="small-note">
-        Expected headers: <code>url</code>, optional <code>label</code>. 
+        Expected headers: <code>url</code>, optional <code>label</code>.
         <a href="sample.csv" download>Download sample.csv</a>
       </p>
 
@@ -99,20 +114,30 @@
       <ul id="bulk-results" class="bulk-results"></ul>
 
       <div class="panel-row panel-meta">
-        <button id="btn-bulk-download" class="btn" disabled>Download bulk results (CSV)</button>
+        <span class="small-note">
+          Each row is scanned via the same URL pipeline; results are summarized as SAFE / SUSPICIOUS / MALICIOUS.
+        </span>
+        <button id="btn-bulk-download" class="btn" disabled>
+          Download bulk results (CSV)
+        </button>
       </div>
     </section>
 
     <!-- Email + OCR panel -->
     <section id="tab-email" class="panel hidden">
       <div class="panel-header">
-        <h2>Email domain & OCR hash</h2>
-        <span class="panel-badge">Header & payload intel</span>
+        <h2>Email domain &amp; OCR hash</h2>
+        <span class="panel-badge">Header &amp; payload intel</span>
       </div>
 
       <div class="panel-row">
         <div class="input-group">
-          <input id="email-input" type="email" placeholder="user@target-domain.com" autocomplete="off">
+          <input
+            id="email-input"
+            type="email"
+            placeholder="user@target-domain.com"
+            autocomplete="off"
+          >
           <button id="btn-email-scan" class="btn-primary">Scan email domain</button>
         </div>
       </div>
@@ -120,7 +145,9 @@
       <div class="panel-row">
         <div class="input-group">
           <input id="ocr-file" type="file" accept="image/*,application/pdf">
-          <button id="btn-ocr-scan" class="btn">Scan attachment hash (OCR feed)</button>
+          <button id="btn-ocr-scan" class="btn">
+            Scan attachment hash (OCR feed)
+          </button>
         </div>
       </div>
 
@@ -138,28 +165,32 @@
       <div id="email-providers" class="results"></div>
 
       <div class="panel-row panel-meta">
-        <button id="btn-email-download" class="btn" disabled>Download email/OCR results (CSV)</button>
+        <span class="small-note">
+          Domain reputation via DNS TXT and AlienVault OTX; file hash via VirusTotal, Filescan.io, MalShare (when keys are configured).
+        </span>
+        <button id="btn-email-download" class="btn" disabled>
+          Download email/OCR results (CSV)
+        </button>
       </div>
     </section>
+  </main>
 
-<footer class="footer">
-  <div class="footer-left">
-    <div class="footer-title">PHISH DEFENDER // LAB CONSOLE</div>
-    <div class="footer-tagline">
-      Cloudflare Worker–powered threat intel hub for URLs, bulk lists & email surfaces. For training and demo use only.
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="footer-title">PHISH DEFENDER // LAB CONSOLE</div>
+      <div class="footer-tagline">
+        Cloudflare Worker–powered threat intel hub for URLs, bulk lists &amp; email surfaces. For training and demo use only.
+      </div>
     </div>
-  </div>
 
-  <div class="footer-right">
-    <span class="footer-pill">Cloudflare Worker: READY</span>
-    <span class="footer-meta">v1.0 • SOC view</span>
-  </div>
-</footer>
+    <div class="footer-right">
+      <span class="footer-pill">Cloudflare Worker: READY v1.0</span>
+      <span class="footer-meta">SOC view • Local hashing • CSV exports</span>
+    </div>
+  </footer>
 
+  <!-- App logic -->
   <script src="assets/app.js"></script>
 </body>
 </html>
-
-
-
-
