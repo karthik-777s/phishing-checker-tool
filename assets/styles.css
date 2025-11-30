@@ -468,39 +468,42 @@ body.theme-light .footer-pill{
   background:rgba(187,247,208,0.9);
 }
 
-
-
-/* Light theme override */
-
+/* Light theme (SOC day mode) */
 body.theme-light{
-  --bg-900:#e7f2ff;
-  --bg-800:#dbeafe;
+  /* neutrals */
+  --bg-900:#f3f4f6;   /* page background */
+  --bg-800:#e5e7eb;
   --panel:#ffffff;
+  /* accents stay in the same blue family */
   --accent:#0066ff;
   --accent-2:#7b61ff;
-  --muted:#1f2937;
+  --muted:#1f2933;
   color:#020617;
+
   background:
-    radial-gradient(circle at top left, #c7d2fe 0, #e5edff 35%, #f9fafb 100%);
+    radial-gradient(circle at top left,#dbeafe 0,#eef2ff 40%,#f9fafb 100%);
 }
 
+/* header + shell */
 body.theme-light .topbar{
-  background:linear-gradient(90deg,rgba(226,232,240,0.96),rgba(241,245,249,0.98));
-  border-bottom:1px solid rgba(148,163,184,0.35);
+  background:linear-gradient(90deg,#e5edff,#f9fafb);
+  border-bottom:1px solid rgba(148,163,184,0.55);
 }
 
 body.theme-light .container{
-  background:linear-gradient(180deg,#ffffff,#eef2ff);
-  box-shadow:0 20px 60px rgba(15,23,42,0.25);
+  background:linear-gradient(180deg,#ffffff,#f3f4ff);
+  box-shadow:0 22px 60px rgba(15,23,42,0.25);
+  border-color:rgba(148,163,184,0.45);
 }
 
+/* panels & tabs */
 body.theme-light .panel{
-  background:radial-gradient(circle at top left,rgba(191,219,254,0.7),#ffffff);
-  border-color:rgba(148,163,184,0.3);
+  background:radial-gradient(circle at top left,rgba(191,219,254,0.8),#ffffff);
+  border-color:rgba(148,163,184,0.45);
 }
 
 body.theme-light .tab{
-  background:#edf2ff;
+  background:#e5edff;
   color:var(--muted);
 }
 
@@ -508,21 +511,26 @@ body.theme-light .tab.active{
   color:#f9fafb;
 }
 
+/* inputs & cards */
 body.theme-light .input-group input[type="text"],
 body.theme-light .input-group input[type="url"],
 body.theme-light .input-group input[type="email"],
 body.theme-light .input-group input[type="file"]{
-  background:#eff6ff;
+  background:#eef2ff;
   color:#020617;
+  border-color:rgba(148,163,184,0.6);
 }
 
 body.theme-light .provider{
-  background:#f8fafc;
+  background:#f9fafb;
+  border-left-color:rgba(59,130,246,0.35);
 }
 
 body.theme-light .small-note{
   color:#4b5563;
 }
+
+
 
 /* Responsive */
 
@@ -536,5 +544,6 @@ body.theme-light .small-note{
     align-items:flex-start;
   }
 }
+
 
 
