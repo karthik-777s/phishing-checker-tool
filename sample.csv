@@ -1,0 +1,4 @@
+url,label
+https://login.example.com,suspicious-login-page
+https://mail.example.org,known-legit
+https://update.example.net,unverified-update-link
