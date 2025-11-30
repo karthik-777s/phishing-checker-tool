@@ -1,128 +1,165 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Phish-Defender — Phishing Checker</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <meta charset="UTF-8">
+  <title>Phish Defender | Cyber Threat Surface Scanner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="theme-dark">
+<body>
   <header class="topbar">
-    <div class="brand">Phish-Defender</div>
+    <div class="brand">
+      <span class="brand-lock">⛨</span>
+      <span>PHISH DEFENDER // SOC SURFACE SCANNER</span>
+    </div>
     <div class="controls">
-      <button id="theme-toggle" title="Toggle dark/light">🌗</button>
+      <button id="theme-toggle" title="Toggle light / dark mode">☾ / ☀</button>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <h1>Phish-Defender</h1>
-      <p class="subtitle">Single-page phishing scanner — single URL, bulk CSV, email checks and OCR image extraction. Keys live in your Cloudflare Worker.</p>
+      <h1>Cyberdefender Recon Console</h1>
+      <p class="subtitle">
+        Multi‑source intelligence for URLs, bulk lists, email domains & attachments – powered by your Cloudflare Worker.
+      </p>
+
+      <!-- Global combined score -->
+      <div class="score-row">
+        <div class="score">
+          <span class="score-label">Combined risk score (last scan)</span>
+          <div class="score-bar">
+            <div id="combined-fill"></div>
+          </div>
+          <div id="combined-percent">Awaiting first scan…</div>
+        </div>
+        <div class="score-legend">
+          <span class="badge safe">0–30 Low</span>
+          <span class="badge suspicious">31–65 Suspicious</span>
+          <span class="badge malicious">66–100 High</span>
+        </div>
+      </div>
     </section>
 
+    <!-- Tabs -->
     <nav class="tabs">
-      <button class="tab active" data-tab="tab-url">URL</button>
+      <button class="tab active" data-tab="tab-url">Single URL</button>
       <button class="tab" data-tab="tab-bulk">Bulk CSV</button>
-      <button class="tab" data-tab="tab-email">Email</button>
-      <button class="tab" data-tab="tab-ocr">OCR (Image)</button>
-      <button class="tab" data-tab="tab-raw">Raw / Debug</button>
+      <button class="tab" data-tab="tab-email">Email & OCR</button>
     </nav>
 
-    <!-- URL tab -->
+    <!-- Single URL panel -->
     <section id="tab-url" class="panel">
+      <div class="panel-header">
+        <h2>Single URL scan</h2>
+        <span class="panel-badge">Live multi‑feed intel</span>
+      </div>
+
       <div class="panel-row">
-        <label class="input-group">
-          <span>Enter URL</span>
-          <input id="url-input" placeholder="https://example.com" />
-          <button id="check-url" class="btn-primary">Scan URL</button>
-        </label>
-      </div>
-
-      <div class="panel-row score-row">
-        <div class="score">
-          <div class="score-label">Combined Score</div>
-          <div class="score-bar" id="combined-bar"><div id="combined-fill"></div></div>
-          <div id="combined-percent">—</div>
-        </div>
-        <div class="provider-filters">
-          <small>Showing providers relevant to URL checks</small>
+        <div class="input-group">
+          <input id="url-input" type="url" placeholder="https://login.example.com" autocomplete="off">
+          <button id="btn-url-scan" class="btn-primary">Scan URL</button>
         </div>
       </div>
 
-      <div id="results-url" class="results"></div>
+      <div class="panel-row panel-meta">
+        <p class="small-note">
+          Feeds: VirusTotal, urlscan.io, URLHaus, AlienVault OTX, AbuseIPDB, Filescan.io, MalShare (only those with keys configured respond).
+        </p>
+        <button id="btn-url-download" class="btn" disabled>Download URL results (CSV)</button>
+      </div>
+
+      <div id="url-providers" class="results"></div>
     </section>
 
-    <!-- Bulk CSV tab -->
+    <!-- Bulk CSV panel -->
     <section id="tab-bulk" class="panel hidden">
-      <div class="panel-row">
-        <label class="input-group">
-          <span>Upload CSV (one URL per line)</span>
-          <input id="csv-file" type="file" accept=".csv,.txt" />
-        </label>
-        <button id="bulk-start" class="btn-primary">Upload & Scan CSV</button>
-        <a id="sample-csv" href="#" download="sample.csv" class="link">Download sample.csv</a>
+      <div class="panel-header">
+        <h2>Bulk CSV URL scan</h2>
+        <span class="panel-badge">Triage at scale</span>
       </div>
 
-      <div id="bulk-progress" class="bulk-progress hidden">
-        <div id="bulk-status">Preparing…</div>
-        <div class="progress"><div id="bulk-bar"></div></div>
+      <div class="panel-row">
+        <div class="input-group">
+          <input id="bulk-file" type="file" accept=".csv">
+          <button id="btn-bulk-scan" class="btn-primary">Scan CSV</button>
+        </div>
+      </div>
+
+      <p class="small-note">
+        Expected headers: <code>url</code>, optional <code>label</code>. 
+        <a href="sample.csv" download>Download sample.csv</a>
+      </p>
+
+      <div class="bulk-progress">
+        <div class="progress">
+          <div id="bulk-bar"></div>
+        </div>
+        <span id="bulk-percent" class="small-note">0%</span>
       </div>
 
       <ul id="bulk-results" class="bulk-results"></ul>
-      <div class="panel-row">
-        <button id="download-results" class="btn">Download Results CSV</button>
+
+      <div class="panel-row panel-meta">
+        <button id="btn-bulk-download" class="btn" disabled>Download bulk results (CSV)</button>
       </div>
     </section>
 
-    <!-- Email tab -->
+    <!-- Email + OCR panel -->
     <section id="tab-email" class="panel hidden">
-      <div class="panel-row">
-        <label class="input-group">
-          <span>Email address</span>
-          <input id="email-input" placeholder="user@example.com" />
-          <button id="check-email" class="btn-primary">Scan Email / Domain</button>
-        </label>
+      <div class="panel-header">
+        <h2>Email domain & OCR hash</h2>
+        <span class="panel-badge">Header & payload intel</span>
       </div>
 
       <div class="panel-row">
-        <div id="results-email" class="results"></div>
+        <div class="input-group">
+          <input id="email-input" type="email" placeholder="user@target-domain.com" autocomplete="off">
+          <button id="btn-email-scan" class="btn-primary">Scan email domain</button>
+        </div>
+      </div>
+
+      <div class="panel-row">
+        <div class="input-group">
+          <input id="ocr-file" type="file" accept="image/*,application/pdf">
+          <button id="btn-ocr-scan" class="btn">Scan attachment hash (OCR feed)</button>
+        </div>
+      </div>
+
+      <p class="small-note">
+        Attachments are SHA‑256 hashed locally in your browser; only the hash is sent to the Worker. Max file size: 5&nbsp;MB.
+      </p>
+
+      <div class="bulk-progress">
+        <div class="progress">
+          <div id="email-bar"></div>
+        </div>
+        <span id="email-status" class="small-note">Idle</span>
+      </div>
+
+      <div id="email-providers" class="results"></div>
+
+      <div class="panel-row panel-meta">
+        <button id="btn-email-download" class="btn" disabled>Download email/OCR results (CSV)</button>
       </div>
     </section>
 
-    <!-- OCR tab -->
-    <section id="tab-ocr" class="panel hidden">
-      <div class="panel-row">
-        <label class="input-group">
-          <span>Upload JPG/PNG (max 2 MB)</span>
-          <input id="ocr-file" type="file" accept="image/jpeg,image/png" />
-        </label>
-        <div class="small-note">OCR runs in your browser (tesseract.js). Extracted URLs are scanned automatically.</div>
-        <button id="ocr-run" class="btn-primary">Run OCR & Scan</button>
+    <!-- Raw JSON output for debugging -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Raw response telemetry</h2>
+        <span class="panel-badge subtle">For analysts & debugging</span>
       </div>
-
-      <div class="panel-row">
-        <div id="ocr-output" class="results"></div>
-      </div>
+      <pre id="raw-output" class="raw hidden"></pre>
     </section>
-
-    <!-- Raw / debug -->
-    <section id="tab-raw" class="panel hidden">
-      <div class="panel-row">
-        <label class="input-group">
-          <span>Raw Worker status</span>
-          <button id="key-status" class="btn">Check Key Status</button>
-        </label>
-      </div>
-      <pre id="raw-output" class="raw"></pre>
-    </section>
-
-    <footer class="footer">
-      <small>Phish-Defender — Demo (non-commercial). Keep API keys secret in Cloudflare Worker. Use responsibly.</small>
-    </footer>
   </main>
 
-  <!-- Load Tesseract for OCR -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v4.1.1/dist/tesseract.min.js"></script>
-  <script src="assets/app.js"></script>
+  <footer class="small-footer">
+    <span class="small-note">
+      Backend: Cloudflare Worker proxy hitting threat‑intel APIs via <code>fetch()</code>. Configure API keys as secrets in your Worker environment. [VT, urlscan.io, URLHaus, AbuseIPDB, AlienVault OTX, Filescan.io, MalShare]
+    </span>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
