@@ -208,7 +208,6 @@ const urlInput = $('url-input');
 const btnUrlScan = $('btn-url-scan');
 const urlProvidersEl = $('url-providers');
 const btnUrlDownload = $('btn-url-download');
-const rawOutput = $('raw-output');
 
 btnUrlScan.addEventListener('click', async () => {
   const target = urlInput.value.trim();
@@ -221,9 +220,6 @@ btnUrlScan.addEventListener('click', async () => {
     const data = await postJSON('/api/check/url', { url: target });
     lastUrlProviders = data.providers || [];
     renderProviders(urlProvidersEl, lastUrlProviders, 'url');
-
-    rawOutput.textContent = JSON.stringify(data, null, 2);
-    rawOutput.classList.remove('hidden');
 
     btnUrlDownload.disabled = !lastUrlProviders.length;
   } catch (e){
@@ -348,9 +344,6 @@ btnEmailScan.addEventListener('click', async () => {
     lastEmailProviders = data.providers || [];
     renderProviders(emailProvidersEl, lastEmailProviders, 'email');
 
-    rawOutput.textContent = JSON.stringify(data, null, 2);
-    rawOutput.classList.remove('hidden');
-
     emailBar.style.width = '100%';
     emailStatus.textContent = 'Completed';
     btnEmailDownload.disabled = !lastEmailProviders.length;
@@ -390,9 +383,6 @@ btnOcrScan.addEventListener('click', async () => {
     // Merge into email providers section but filtered as file
     renderProviders(emailProvidersEl, providers, 'file');
 
-    rawOutput.textContent = JSON.stringify(data, null, 2);
-    rawOutput.classList.remove('hidden');
-
     emailBar.style.width = '100%';
     emailStatus.textContent = 'Completed';
     lastEmailProviders = providers;
@@ -417,3 +407,4 @@ btnEmailDownload.addEventListener('click', () => {
   }));
   downloadCsv('email_ocr_results.csv', rows, ['provider','verdict','ok','note']);
 });
+
